@@ -33,22 +33,34 @@ var url = "mongodb://localhost:27017/";
 
 const client = new MongoClient(url);
 
+// function subcategory(){
+
+// }
+
 function dbgetdata(data) {
     var typearray = [], url = []
+    // console.log(data)
     data.forEach(function (e) {
         // console.log(e)
-        var type = e.contract.type
+        var type = e.nft
+        // console.log(type)
+        var typevalue = e.contract.type
         // console.log(type)
         var animationurl = e.nft.animation_url
         var fileurl = e.nft.file_url
         // data = type
-        function category(obj, element, uniquename, s3) {
+        function category(obj, element, value, s3) {
             // console.log(obj)
-            !obj[element] ? (obj[element] = { uniquename: uniquename, "count": 1 }, s3.push(obj[element])) : obj[element].count++
-            // console.log(s3)
+            !obj[element] ? (obj[element] = { "type": value, "count": 1 }, s3.push(obj[element])) : obj[element].count++
+            // !obj[element] ? (obj[element] = { "type": obj[element], "count": 1}, s3.push(obj[element])) : obj[element].count++
+            // !obj[element] ? (obj[element] = { uniquename: uniquename, "count": 1 }, s3.push(obj[element])) : obj[element].count++
+            !obj[type] ? (obj[type] = { "type": value }, array.push(obj[type]),
+            animationurl != '' ? subcategory(obj[type], animationurl) : subcategory(obj[type], fileurl)) :
+            animationurl != '' ? subcategory(obj[type], animationurl) : subcategory(obj[type], fileurl)
         }
-        category(e, type, 'ERC721', typearray)
-    })
+        category(this, type, typevalue, typearray)
+    },{})
+    console.log(typearray)
 }
 
 // MongoClient.connect(url, function (err, db) {
@@ -137,8 +149,6 @@ function test(element, resolve, users) {
             const newobj = obj.statistics
             newobj.name = element.Brand
             users.push(newobj)
-            // json=users
-            // result.send(users)
             // console.log(users)
             // users.push(elem.toString());
             // var path = './public/filterdata.json'
@@ -147,7 +157,7 @@ function test(element, resolve, users) {
     }).on('error', err => {
         console.log('Error: ', err.message);
     });
-     console.log(users)
+    //  console.log(users)
     // result.send(users)
 }
 
@@ -160,7 +170,7 @@ async function getdata(array, result) {
         let promise = await new Promise(function (resolve, reject) {
             // the function is executed automatically when the promise is constructed
             // after 1 second signal that the job is done with the result "done"
-            setTimeout(() => test(data, resolve,users), 1000);
+            setTimeout(() => test(data, resolve, users), 1000);
         });
     }
     result.send(users)
@@ -169,18 +179,20 @@ async function getdata(array, result) {
 
 app.post('/file', (req, res, next) => {
     // console.log(req.body)
-    var dataarray=req.body
-    getdata(dataarray,res)
+    var dataarray = req.body
+    getdata(dataarray, res)
 });
 
 app.post('/filterdatajson', (req, res) => {
     // var rawdata = fs.readFileSync('./public/filterdata.json');
     // var newdata = JSON.parse(rawdata);
-    var updated = users;
-    var filterdata = req.body
+    // console.log(req.body.mainjson)
+    var updated = req.body.mainjson.name;
+    var filterdata = req.body.filteredvalue
     // console.log(filterdata)
     filterdata.forEach(function (key) {
         var filtercriteria = Object.keys(key)[0]
+        // console.log(filtercriteria)
         var filtervalue = key[filtercriteria]
         // console.log(filtervalue)
         updated = updated.filter(st => filtervalue.includes(st[filtercriteria]));

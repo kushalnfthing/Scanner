@@ -76,7 +76,7 @@
                     console.log(json)
                     var data = { "name": json }
                     localStorage.setItem("name", JSON.stringify(data));
-                    window.location.href = "./chart.html"
+                    window.location.href = "http://localhost:3000/chart.html"
                 })
                 .catch(error => {
                     console.error(error)

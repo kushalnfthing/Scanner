@@ -94,7 +94,7 @@ function createbar(chartbar, Xaxisonbar) {
 }
 
 function bar(data, y) {
-    console.log(data)
+    // console.log(data)
     barxaxis = []
     baryaxis = []
     data.forEach(function (item) {

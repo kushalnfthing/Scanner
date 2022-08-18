@@ -31,7 +31,7 @@ var json=JSON.parse(value)
             loader("block", "none", "A11")
 
             maindata = json;
-            console.log(maindata)
+            // console.log(maindata)
             // counter(json)
             chartselection.forEach(function (chart) {
                 // console.log(chart)
@@ -44,7 +44,7 @@ var json=JSON.parse(value)
                 // console.log(title)
                 switch (chart.Chart) {
                     case "Bar":
-                        console.log(json[chart.Xaxis])
+                        // console.log(json[chart.Xaxis])
                         bar(json[chart.Xaxis], chart.Yaxis)
                         window[chart.id] = createbar(chart.id, chart.Xaxis)
                         updatebar(chart.id, barxaxis, baryaxis)

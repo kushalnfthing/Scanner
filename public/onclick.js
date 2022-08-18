@@ -63,7 +63,7 @@ function checkAll() {
             arr.push(jsonfile)
         }
     });
-
+    // console.log(maindata)
     // console.log(arr) 
     //console.log(a) 
     //const arr = { "year": y, "airport":a}
@@ -77,15 +77,15 @@ function checkAll() {
 
     fetch('/filterdatajson', {
         method: 'POST',
-        body: JSON.stringify(arr),
+        body: JSON.stringify({"filteredvalue":arr,"mainjson":maindata}),
         headers: {
             'Content-type': 'application/json'
         }
     })
         .then(response => response.json())
         .then(json => {
-            maindata = json
-            // console.log(maindata) 
+            // maindata = json
+            // console.log(json) 
             try {
                 loader("block", "none", "All")
                 // console.log(document.getElementById("Charts").style.display) 
@@ -189,7 +189,7 @@ function filterxaxis(xvalues, idval, callback) {
     // console.log(xvalues)
     fetch('/filterdatajson', {
         method: 'POST',
-        body: JSON.stringify(xvalues),
+        body: JSON.stringify({"filteredvalue":xvalues,"mainjson":maindata}),
         headers: {
             'Content-type': 'application/json'
         }
@@ -343,53 +343,53 @@ function chartreset() {
     // })
     //     .then(response => response.json())
     //     .then(json => {
-            try {
-                maindata = json;
-                // counter (json) 
-                chartselection.forEach(function (chart) {
-                    switch (chart.Chart) {
-                        case "Bar":
-                            bar(maindata[chart.Xaxis], chart.Yaxis)
-                            updatebar(chart.id, barxaxis, baryaxis)
-                            break
+    try {
+        maindata = json;
+        // counter (json) 
+        chartselection.forEach(function (chart) {
+            switch (chart.Chart) {
+                case "Bar":
+                    bar(maindata[chart.Xaxis], chart.Yaxis)
+                    updatebar(chart.id, barxaxis, baryaxis)
+                    break
 
-                        case "Pie":
-                            pie(json[chart.Xaxis], chart.Yaxis)
-                            window[chart.id] = createpie(chart.id, chart.Xaxis)
-                            updatepie(chart.id, piexaxis, pieyaxis)
-                            break
+                case "Pie":
+                    pie(json[chart.Xaxis], chart.Yaxis)
+                    window[chart.id] = createpie(chart.id, chart.Xaxis)
+                    updatepie(chart.id, piexaxis, pieyaxis)
+                    break
 
-                        case "Treemap":
-                            treemapnew(json[chart.Xaxis], chart.Yaxis)
-                            window[chart.id] = createtree(chart.id, chart.Xaxis)
-                            updatetree(chart.id)
-                            break
+                case "Treemap":
+                    treemapnew(json[chart.Xaxis], chart.Yaxis)
+                    window[chart.id] = createtree(chart.id, chart.Xaxis)
+                    updatetree(chart.id)
+                    break
 
-                        case "StackedBar":
-                            var node = document.getElementById(chart.id)
-                            var chartcon = node.parentNode
-                            oriwidth = chartcon.offsetWidth
-                            var tempjson = json[chart.Xaxis].slice(0, chart.value)
-                            stackbar(tempjson, chart.Maxis, chart.Naxis, chart.sort)
-                            window[chart.id] = createstackedbar(chart.id, chart.Xaxis)
-                            updatestackbar(chart.id, newjson)
-                            break
-                    }
-
-                })
-
-
-                // var dropdown = document.getElementsByClassName("dropdown-btn");
-                // var i;
-                // keys = [];
-                // for (var k in json) {
-                //     if (k != "Values")
-                //         keys.push(k)
-                // }
-            } catch (error) {
-                console.log(error);
+                case "StackedBar":
+                    var node = document.getElementById(chart.id)
+                    var chartcon = node.parentNode
+                    oriwidth = chartcon.offsetWidth
+                    var tempjson = json[chart.Xaxis].slice(0, chart.value)
+                    stackbar(tempjson, chart.Maxis, chart.Naxis, chart.sort)
+                    window[chart.id] = createstackedbar(chart.id, chart.Xaxis)
+                    updatestackbar(chart.id, newjson)
+                    break
             }
-        // });
+
+        })
+
+
+        // var dropdown = document.getElementsByClassName("dropdown-btn");
+        // var i;
+        // keys = [];
+        // for (var k in json) {
+        //     if (k != "Values")
+        //         keys.push(k)
+        // }
+    } catch (error) {
+        console.log(error);
+    }
+    // });
 }
 
 function setting(id) {
@@ -443,7 +443,7 @@ function setting(id) {
                     document.getElementById("parameter2").appendChild(option)
                 }
                 // console.log(settingkeys)
-                const removeValFromIndex = new Array(0,1,4,5);
+                const removeValFromIndex = new Array(0, 1, 4, 5);
                 var sortsettingkeys = settingkeys.filter((value, i) => removeValFromIndex.includes(i))
                 // console.log(sortsettingkeys)
                 for (i = 0; i < settingkeys.length; i++) {
@@ -465,10 +465,10 @@ function setting(id) {
                     hide("sortpara", y)
                     hide("divpara2", y)
                     hide("divsortpara", y)
-                    hide("para2",y)
-                    document.getElementById("flex1").style.height="40%"
-                    document.getElementById("flex2").style.height="40%"
-                    document.getElementById("flex3").style.height="20%"
+                    hide("para2", y)
+                    document.getElementById("flex1").style.height = "40%"
+                    document.getElementById("flex2").style.height = "40%"
+                    document.getElementById("flex3").style.height = "20%"
                     document.getElementById("category").value = chart.Xaxis;
                     document.getElementById("parameter").value = chart.Yaxis;
                 }
@@ -479,10 +479,10 @@ function setting(id) {
                     hide("sortpara", y)
                     hide("divpara2", y)
                     hide("divsortpara", y)
-                    hide("para2",y)
-                    document.getElementById("flex1").style.height="40%"
-                    document.getElementById("flex2").style.height="40%"
-                    document.getElementById("flex3").style.height="20%"
+                    hide("para2", y)
+                    document.getElementById("flex1").style.height = "40%"
+                    document.getElementById("flex2").style.height = "40%"
+                    document.getElementById("flex3").style.height = "20%"
                     document.getElementById("category").value = chart.Xaxis;
                     document.getElementById("parameter").value = chart.Yaxis;
                 }
@@ -493,10 +493,10 @@ function setting(id) {
                     hide("sortpara", y)
                     hide("divpara2", y)
                     hide("divsortpara", y)
-                    hide("para2",y)
-                    document.getElementById("flex1").style.height="40%"
-                    document.getElementById("flex2").style.height="40%"
-                    document.getElementById("flex3").style.height="20%"
+                    hide("para2", y)
+                    document.getElementById("flex1").style.height = "40%"
+                    document.getElementById("flex2").style.height = "40%"
+                    document.getElementById("flex3").style.height = "20%"
                     document.getElementById("category").value = chart.Xaxis;
                     document.getElementById("parameter").value = chart.Yaxis;
                 }
@@ -507,7 +507,7 @@ function setting(id) {
                     hide("sortpara", "flex")
                     hide("divpara2", "flex")
                     hide("divsortpara", "flex")
-                    hide("para2","flex")
+                    hide("para2", "flex")
                     document.getElementById("category").value = chart.Xaxis;
                     document.getElementById("parameter").value = chart.Maxis;
                     document.getElementById("sortparameter").value = chart.sort;
