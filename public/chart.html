@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <script src="./pluginjs/chartjs.js"></script>
+    <script src="./pluginjs/chartjstreemap.js"></script>
+    <!-- <script src="./pluginjs/Tabulator/js/tabulator.min.js"></script> -->
+    <!-- <link href="./pluginjs/Tabulator/css/tabulator.min.css" rel="stylesheet"> -->
+    <link href="./loader.css" rel="stylesheet">
+    <link href="./chart.css" rel="stylesheet">
+    <script src="./chartselection.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></script> -->
+    <!-- <script src="./pluginjs/jquery.js"></script> -->
+    <!-- <script src="./pluginjs/datepicker/moment.min.js"></script>
+    <script src="./pluginjs/datepicker/daterangepicker.js"></script>
+    <link href="./pluginjs/datepicker/daterangepicker.css" rel="stylesheet"> -->
+</head>
+
+<body style="margin:0px;overflow-x:hidden;overflow-y:hidden">
+    <input type="checkbox" id="check" />
+    <div style="display:flex;height: 100%;width: 100%;position:absolute;flex-direction: column;background-color: #f6f8fc;"
+        class="chartcon">
+        <div
+            style="display:flex;height: 60px;width: 100%;align-content: center;align-items: center;background-color: white;">
+            <label for="check">
+                <i style="background-image: url(images/menu1.png)" onclick="hide('btn',y)" class="fas fa-bars"
+                    id="btn"></i>
+                <i style="background-image: url(images/menu.png)" onclick="hide('btn',z)" class="fas fa-times"
+                    id="cancel"></i>
+            </label>
+            <p style="margin-left: 135px;font-size: 35px;font-weight: 600;">Data</p>
+            <!-- <div style="display: flex; flex: 1 0; align-items: center; justify-content: flex-end; margin-right: 150px;">
+                <div style="display: flex;">
+                    <button class="b1" onclick="hidediv(y,x)">Charts</button>
+                    <button class="b1" onclick="hidediv(x,y)">Table</button>
+                </div>
+            </div> -->
+        </div>
+        <div id="Charts" style="display:flex;width:100%;flex:1;flex-direction:column">
+            <!-- <div
+                style="display: flex;height: 17%;width: 95%;background-color:#f6f8fc;align-content: center;justify-content: space-between;align-self: center;">
+                <div class="unique" style="display: flex;">
+                    <div class="datacon">
+                        <div class="dataimg">
+                            <div class="imagec">
+                                F
+                            </div>
+                        </div>
+                        <div class="dataval">
+                            <p class="dataheading">
+                                Features created
+                            </p>
+                            <p class="datanum" id="FeatureVal"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="unique" style="display:flex;">
+                    <div class="datacon">
+                        <div class="dataimg">
+                            <div class="imagec">
+                                E
+                            </div>
+                        </div>
+                        <div class="dataval">
+                            <p class="dataheading">
+                                Handled Errors
+                            </p>
+                            <p class="datanum" id="ErrorVal"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="unique" style="display:flex;">
+                    <div class="datacon">
+                        <div class="dataimg">
+                            <div class="imagec">
+                                C
+                            </div>
+                        </div>
+                        <div class="dataval">
+                            <p class="dataheading">
+                                Critical Errors
+                            </p>
+                            <p class="datanum" id="CriticalVal"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="unique" style="display:flex;">
+                    <div class="datacon">
+                        <div class="dataimg">
+                            <div class="imagec">
+                                P
+                            </div>
+                        </div>
+                        <div class="dataval">
+                            <p class="dataheading">
+                                Unique part count
+                            </p>
+                            <p class="datanum" id="PartsVal">1450</p>
+                        </div>
+                    </div>
+                </div> -->
+            <!-- <div class="unique" style="display: flex;"></div>
+                <div class="unique" style="display: flex;"></div> -->
+        </div>
+        <div class="first">
+            <div class="second" style="padding-left: 7px;">
+                <div class="third">
+                    <div class="fourth">
+                        <div class="fifth">
+                            <!-- <a id="chartbar1" class="title"></a> -->
+                            <a id="Chart1title" class="title">
+                                Windows Versions vs Features/Errors
+                            </a>
+                        </div>
+                        <div class="fullscreen">
+                                <!-- <div class="febuttons">
+                                    <button value="count" onclick="uncheck()" class="Feature rebtn"></button>
+                                    <button value="count" onclick="onfeatureerrorclick(this)"
+                                        class="Feature febtn">Features</button>
+                                    <button value="Error" onclick="onfeatureerrorclick(this)"
+                                        class="Error febtn">Errors</button>
+                                    <button value="NormalError" onclick="onfeatureerrorclick(this)"
+                                        class="Error febtn">Normal</button>
+                                    <button value="CriticalError" onclick="onfeatureerrorclick(this)"
+                                        class="Error febtn">Critical</button>
+                                </div> -->
+                                <button id="Chart1Fs" class="btn" onclick="hide('settingmodal',z),setting(this)"><i class="fal fa-expand"></i></button>
+                            </div>
+                    </div>
+                    <div class="chartcontainer" style="overflow-x: auto;overflow-y: hidden;">
+                        <!-- <canvas id="barcharty"></canvas> -->
+                        <div class="loader" style="display: none">
+                            <div class="lds-roller">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </div>
+                        <canvas id="Chart1"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="second">
+                <div class="third">
+                    <div class="fourth">
+                        <div class="fifth">
+                            <a id="Chart2title" class="title">
+                                Department vs Features Count
+                            </a>
+                        </div>
+                        <div class="fullscreen">
+                                <!-- <div class="febuttons">
+                                    <button value="count" onclick="uncheck()" class="Feature rebtn"></button>
+                                    <button value="count" onclick="onfeatureerrorclick(this)"
+                                        class="Feature febtn">Features</button>
+                                    <button value="Error" onclick="onfeatureerrorclick(this)"
+                                        class="Error febtn">Errors</button>
+                                    <button value="NormalError" onclick="onfeatureerrorclick(this)"
+                                        class="Error febtn">Normal</button>
+                                    <button value="CriticalError" onclick="onfeatureerrorclick(this)"
+                                        class="Error febtn">Critical</button>
+                                </div> -->
+                                <button id="Chart2Fs" class="btn" onclick="hide('settingmodal',z),setting(this)"><i class="fal fa-expand"></i></button>
+                            </div>
+                    </div>
+                    <div class="chartcontainer" style="overflow-x: auto;overflow-y: hidden;">
+                        <div class="loader" style="display: none">
+                            <div class="lds-roller">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </div>
+                        <canvas id="Chart2"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="second" style="width:15%">
+                <div
+                    style="display: flex;flex-direction: column;width: 100%;height: 50%;align-content: center;justify-content: center;align-items: center;">
+                    <div class="third" style="width: 85%;height: 80%;">
+                        <!-- <div class="third" style="width: 100%;height: 50%;"> -->
+                        <a id="Chart5title" class="infovalue">
+                        </a>
+                        <!-- </div> -->
+                        <!-- <div class="third" style="width: 100%;height: 50%;"> -->
+                        <a id="Chart5value" class="infovalue"></a>
+                        <!-- </div> -->
+                    </div>
+                </div>
+                <div
+                    style="display: flex;flex-direction: column;width: 100%;height: 50%;align-content: center;justify-content: center;align-items: center;">
+                    <div class="third" style="width: 85%;height: 80%;">
+                        <a id="Chart6title" class="infovalue">
+                        </a>
+                        <a id="Chart6value" class="infovalue">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="first">
+            <div class="second" style="padding-left: 7px;">
+                <div class="third">
+                    <div class="fourth">
+                        <div class="fifth">
+                            <!-- <a id="chartbar1" class="title"></a> -->
+                            <a id="Chart3title" class="title">
+                                NX Versions vs Features Count
+                            </a>
+                        </div>
+                        <div class="fullscreen">
+                            <!-- <div class="febuttons">
+                                    <button value="count" onclick="uncheck()" class="Feature rebtn"></button>
+                                    <button value="count" onclick="onfeatureerrorclick(this)"
+                                        class="Feature febtn">Features</button>
+                                    <button value="Error" onclick="onfeatureerrorclick(this)"
+                                        class="Error febtn">Errors</button>
+                                    <button value="NormalError" onclick="onfeatureerrorclick(this)"
+                                        class="Error febtn">Normal</button>
+                                    <button value="CriticalError" onclick="onfeatureerrorclick(this)"
+                                        class="Error febtn">Critical</button>
+                                </div> -->
+                            <button id="Chart3Fs" class="btn" onclick="hide('settingmodal',z),setting(this)"><i
+                                    class="fal fa-expand"></i></button>
+                            <div id="settingmodal" class="modal">
+                                <div class="modal-content">
+                                    <div style="display:flex;flex-direction:column;width:100%;height: 100%;">
+                                        <div id="flex1" style="display: flex;flex-direction:row;width:100%;height: 35%;">
+                                            <div style="display: flex;flex-direction:column;width: 50%;height: 100%;">
+                                                <div
+                                                    style="display: flex;flex-direction:row;width:100%;height: 50%;align-items: center;align-content: center;justify-content: center;">
+                                                    <p class="infovalue">Choose Category</p>
+                                                </div>
+                                                <div
+                                                    style="display: flex;flex-direction:row;width:100%;height: 50%;align-items: center;align-content: center;justify-content: center;">
+                                                    <p class="infovalue">Enter Cutoff Value</p>
+
+                                                </div>
+                                            </div>
+                                            <div style="display: flex;flex-direction:row;width: 50%;height: 100%;">
+                                                <div
+                                                    style="display: flex;flex-direction:column;width: 90%;height: 100%;">
+                                                    <div
+                                                        style="display: flex;width: 90%;height: 50%;align-items: center;align-content: center;justify-content: center;">
+                                                        <div style="list-style: none;color: white;padding: 0px;">
+                                                            <select class="categorybtn" name="category"
+                                                                id="category"></select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="popup"
+                                                        style="display: flex;width: 90%;height: 50%;align-items: center;align-content: center;justify-content: center;">
+                                                        <input type="text" id="cutoffvalue" style="width: 55%;">
+                                                        <span class="popuptext" id="myPopup">Please enter a number</span>
+                                                    </div>
+                                                </div>
+                                                <div style="display: flex;width: 10%;height: 100%;"><span class="close"
+                                                        onclick="hide('settingmodal',y)">&times;</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="flex2" style="display: flex;flex-direction:row;width:100%;height: 45%;">
+                                            <div style="display: flex;flex-direction:column;width: 50%;height: 100%;">
+                                                <div
+                                                    style="display: flex;flex-direction:row;width:100%;height: 30%;align-items: center;align-content: center;justify-content: center;">
+                                                    <p class="infovalue">Choose Parameter</p>
+                                                </div>
+                                                <div id="para2"
+                                                    style="display: flex;flex-direction:row;width:100%;height: 30%;align-items: center;align-content: center;justify-content: center;">
+                                                    <p class="infovalue">Choose second parameter</p>
+
+                                                </div>
+                                                <div id="sortpara"
+                                                    style="display: flex;flex-direction:row;width:100%;height: 40%;align-items: center;align-content: center;justify-content: center;">
+                                                    <p class="infovalue">Choose sort parameter</p>
+
+                                                </div>
+                                            </div>
+                                            <div style="display: flex;flex-direction:row;width: 50%;height: 100%;">
+                                                <div
+                                                    style="display: flex;flex-direction:column;width: 90%;height: 100%;">
+                                                    <div
+                                                        style="display: flex;width: 90%;height: 30%;align-items: center;align-content: center;justify-content: center;">
+                                                        <div style="list-style: none;color: white;padding: 0px;">
+                                                            <select class="categorybtn" name="parameter"
+                                                                id="parameter"></select>
+                                                        </div>
+                                                    </div>
+                                                    <div id="divpara2"
+                                                    style="display: flex;width: 90%;height: 30%;align-items: center;align-content: center;justify-content: center;">
+                                                    <select class="categorybtn" name="parameter2"
+                                                            id="parameter2"></select>
+                                                </div>
+                                                    <div id="divsortpara"
+                                                        style="display: flex;width: 90%;height: 40%;align-items: center;align-content: center;justify-content: center;">
+                                                        <select class="categorybtn" name="sortparameter"
+                                                                id="sortparameter"></select>
+                                                    </div>
+                                            
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="flex3"
+                                            style="display: flex;flex-direction:row;width:100%;height: 20%;align-items: center;align-content: center;justify-content: center;">
+                                            <button class="categorybtn" onclick="apply()">Apply</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div id="setting" class="menu">
+                                    <ul id="xaxiselement" style="list-style: none;color:black;padding: 0px;">
+                                        <li>
+                                            <div id="xaxis" class="dropdown-container">
+                                                <div>
+                                                    <a id="xaxisvalue"></a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div id="yaxis" class="dropdown-container">
+                                                <a id="yaxisvalue" style="width:100%;text-overflow: ellipsis;"></a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <button style="margin-left: 17px;" class="button" onclick="checkAll()">Submit</button>
+                                </div> -->
+                        </div>
+                    </div>
+                    <div class="chartcontainer">
+                        <div class="loader" style="display: none">
+                            <div class="lds-roller">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </div>
+                        <canvas id="Chart3"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="second">
+                <div class="third">
+                    <div class="fourth">
+                        <div class="fifth">
+                            <!-- <a id="chartbar2" class="title"></a> -->
+                            <a id="Chart4title" class="title">
+                                Feature Names vs Count
+                            </a>
+                        </div>
+                        <div class="fullscreen">
+                            <!-- <div class="febuttons">
+                                    <button value="count" onclick="uncheck()" class="Feature rebtn"></button>
+                                    <button value="count" onclick="onfeatureerrorclick(this)"
+                                        class="Feature febtn">Features</button>
+                                    <button value="Error" onclick="onfeatureerrorclick(this)"
+                                        class="Error febtn">Errors</button>
+                                    <button value="NormalError" onclick="onfeatureerrorclick(this)"
+                                        class="Error febtn">Normal</button>
+                                    <button value="CriticalError" onclick="onfeatureerrorclick(this)"
+                                        class="Error febtn">Critical</button>
+                                </div> -->
+                            <button id="Chart4Fs" class="btn" onclick="hide('settingmodal',z),setting(this)"><i
+                                    class="fal fa-expand"></i></button>
+                        </div>
+                    </div>
+                    <div class="chartcontainer" style="overflow-x: auto;overflow-y: hidden;">
+                        <div class="loader" style="display: none">
+                            <div class="lds-roller">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </div>
+                        <canvas id="Chart4"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="second" style="width:15%">
+                <div
+                    style="display: flex;flex-direction: column;width: 100%;height: 50%;align-content: center;justify-content: center;align-items: center;">
+                    <div class="third" style="width: 85%;height: 80%;">
+                        <a id="Chart7title" class="infovalue">
+                        </a>
+                        <a id="Chart7value" class="infovalue">
+                        </a>
+                    </div>
+                </div>
+                <div
+                    style="display: flex;flex-direction: column;width: 100%;height: 50%;align-content: center;justify-content: center;align-items: center;">
+                    <div class="third" style="width: 85%;height: 80%;">
+                        <a id="Chart8title" class="infovalue">
+                        </a>
+                        <a id="Chart8value" class="infovalue">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div id="Tablecon"
+            style="display: none;width: 100%;flex:1;flex-direction: column;align-content: center;justify-content: center;align-items:center;overflow:hidden;">
+            <div id="Tablemenu"
+                style="display: flex;width: 90%;height: 5%;align-content: center;justify-content: flex-end;align-items:center;padding-right: 10px;">
+                <button value="count" onclick="tablefil(this)" class="Feature febtn">Features</button>
+                <button value="Error" onclick="tablefil(this)" class="Error febtn">Errors</button>
+                <button value="Normal Error" onclick="tablefil(this)" class="Error febtn">Normal</button>
+                <button value="Critical Error" onclick="tablefil(this)" class="Error febtn">Critical</button>
+            </div>
+            <div id="Table" style="display: flex;width: 90%;height: 90%;background-color:white;"></div>
+        </div> -->
+    <div class="sidebar">
+        <header>UroVeneer</header>
+        <ul id="ulelement" style="list-style: none;color: white;padding: 0px;">
+            <!-- <li>
+                <div id="yeardrop" class="dropdown-container">
+                    <div>
+                        <a id="choosey"></a>
+                    </div>
+                </div>
+            </li> -->
+            <!-- <li>
+                <div id="airportdrop" class="dropdown-container">
+                    <a id="choosea" style="width:100%;text-overflow: ellipsis;"></a>
+                </div>
+            </li> -->
+        </ul>
+        <button style="margin-left: 17px;" class="button" onclick="checkAll()">Submit</button>
+        <button class="button" onclick="uncheck()">Reset</button>
+    </div>
+    <script>
+        var y = 'none', z = 'block', exp = false, x = "flex";
+        function hide(id, y) {
+            var x = document.getElementById(id);
+            x.style.display = y;
+        }
+        function chartname(id, y) {
+            document.getElementById(id).innerHTML = y;
+        }
+            // function hidediv(x, y) {
+            //     var c = document.getElementById("Charts");
+            //     c.style.display = y;
+            //     var t = document.getElementById("Tablecon");
+            //     c.style.display = x;
+            //     createtable(onclickfilter)
+            // }
+            // $(function () {
+            //     $('input[name="daterange"]').daterangepicker({
+            //         opens: 'left'
+            //     }, function (start, end, label) {
+            //         console.log("A new date selection was made:" + start.format('YYYY-MM-DD') + 'to' + end.format('YYYY-MM-DD'));
+            //     });
+            // });
+    </script>
+    <script src="color.js"></script>
+    <script src="onclick.js"></script>
+    <script src="piechart.js"></script>
+    <script src="barchart.js"></script>
+    <script src="treechart.js"></script>
+    <script src="stackedbar.js"></script>
+    <script src="chart.js"></script>
+    <script src="table.js"></script>
+</body>
+
+</html>

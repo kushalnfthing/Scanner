@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+</head>
+
+<body>
+    <input type="file" name="file" id="file">
+    <p id="fileContents"></p>
+    <!-- <button onclick="handleImageUpload()" name="submit">Upload File</button> -->
+    <script>
+        const handleImageUpload = event => {
+            const files = event.target.files
+            var file = files[0], filecontent, filetype = files[0].type
+            if (file) {
+                var reader = new FileReader();
+                reader.readAsText(file, "UTF-8");
+                reader.onload = function (evt) {
+                    csvJSON(evt.target.result)
+                    // document.getElementById("fileContents").innerHTML = evt.target.result;
+                    // filecontent = JSON.parse(evt.target.result)
+                    // console.log(filecontent)
+                }
+                reader.onerror = function (evt) {
+                    document.getElementById("fileContents").innerHTML = "error reading file";
+                }
+            }
+        }
+        function csvJSON(csv) {
+            var items = [];
+            var rows = csv.split(/\n/g);
+            var keys = rows.shift().split(",");
+            var heading = []
+            keys.forEach((column) => {
+                column = column.replace(/['"]+/g, "");
+                heading.push(column)
+            })
+            rows.forEach(raw_row => {
+                var row = {};
+                var columns = raw_row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                columns.forEach((column, index) => {
+                    var key = heading[index];
+                    column = column.replace(/['"]+/g, "");
+                    row[key] = column;
+                });
+                items.push(row);
+                console.log(items)
+            });
+            // console.log(csv)
+            // var lines = csv.split("\n");
+            // console.log(lines)
+            // var result = [];
+            // var headers = lines[0].split(",");
+            // console.log(headers)
+            // for (var i = 1; i < lines.length; i++) {
+            //     var obj = {};
+            //     var currentline = lines[i].split(",");
+            //     // console.log(currentline)
+            //     for (var j = 0; j < headers.length; j++) {
+            //         obj[headers[j]] = currentline[j];
+            //     }
+            //     console.log(obj)
+            //     result.push(obj);
+            // }
+            // console.log(result)
+            fetch('/file', {
+                method: 'POST',
+                body: JSON.stringify(items),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                }
+            })
+                .then(response => response.json())
+                .then(json => {
+                    console.log(json)
+                    var data = { "name": json }
+                    localStorage.setItem("name", JSON.stringify(data));
+                    window.location.href = "http://localhost:3000/chart.html"
+                })
+                .catch(error => {
+                    console.error(error)
+                })
+        }
+        document.querySelector('#file').addEventListener('change', event => {
+            handleImageUpload(event)
+        })
+
+    </script>
+</body>
+
+</html>

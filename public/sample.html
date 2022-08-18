@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+</head>
+
+<body>
+    <script>
+        function1()
+        function function1() {
+            const nam = { "username": "username" }
+
+            fetch('/file', {
+                method: 'POST',
+                body: JSON.stringify(nam),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                }
+            })
+                .then(response => response.json())
+                .then(submitjson => {
+                    console.log(submitjson)
+                })
+        }
+    </script>
+</body>
+
+</html>
