@@ -123,7 +123,7 @@
                                 var current_data = JSON.parse(this.value)
                                 var contract_add = current_data["Contract Address"]
                                 localStorage.setItem("view_data", this.value);
-                                window.location.href = "http://localhost:3000/view.html?" + contract_add
+                                window.location.href = "./view.html?" + contract_add
                             })
                             firstDiv.appendChild(viewbtn)
                             middleDiv.appendChild(firstDiv)
@@ -178,7 +178,7 @@
                     console.log(json)
                     var data = { "name": json }
                     localStorage.setItem("name", JSON.stringify(data));
-                    window.location.href = "http://localhost:3000/chart.html"
+                    window.location.href = "./chart.html"
                 })
         }
 

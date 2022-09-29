@@ -60,7 +60,7 @@
                     console.log(json.formattype_array)
                     var data = { "name": json.type_array, "type":json.formattype_array }
                     localStorage.setItem("name", JSON.stringify(data));
-                    window.location.href = "http://localhost:3000/chart.html"
+                    window.location.href = "./chart.html"
                 })
                 .catch(error => {
                     console.error(error)

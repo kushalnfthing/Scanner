@@ -41,7 +41,7 @@
                     console.log(json)
                     // var current_data = JSON.parse(json[0])
                     localStorage.setItem("client_data", JSON.stringify(json[0]));
-                    window.location.href = "http://localhost:3000/client.html?" + json[0].Brand
+                    window.location.href = "./client.html?" + json[0].Brand
                 })
         }
     </script>

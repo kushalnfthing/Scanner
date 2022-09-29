@@ -156,7 +156,8 @@
             justify-content: center;
             padding-bottom: 10px;
         }
-        .searchindividualdiv{
+
+        .searchindividualdiv {
             display: flex;
             flex-direction: row;
             width: 100%;
@@ -182,7 +183,6 @@
     <script>
         var names = []
         function nftload() {
-            console.log("in")
             var parameters = location.search.split('?');
             console.log(parameters[1])
             var add = { "address": parameters[1] }
@@ -196,13 +196,11 @@
                 .then(response => response.json())
                 .then(json => {
                     json.forEach(element => {
+                        if (element.contract.name == '') {
+                            element.contract.name = "No Name"
+                        }
                         if (!names.includes(element.contract.name)) {
-                            if (element.contract.name != '') {
-                                names.push(element.contract.name)
-                            }
-                            else {
-                                names.push(element.contract.name = "No Name")
-                            }
+                            names.push(element.contract.name)
                         }
                     });
 
@@ -511,256 +509,6 @@
         }
 
         autocomplete(document.getElementById("myInput"), names);
-        // var parameters = location.search.split('?');
-        // console.log(parameters[1])
-        // var add = { "address": parameters[1] }
-        // fetch('/walletaddress', {
-        //     method: 'POST',
-        //     body: JSON.stringify(add),
-        //     headers: {
-        //         'Content-type': 'application/json; charset=UTF-8'
-        //     }
-        // })
-        //     .then(response => response.json())
-        //     .then(json => {
-        //         console.log(json)
-        //         console.log(json.slice(0, 20))
-        //         json.forEach(element => {
-        //             if (!names.includes(element.contract.name)) {
-        //                 console.log(element.contract.name)
-        //                 if (element.contract.name != '') {
-        //                     names.push(element.contract.name)
-        //                 }
-        //                 else {
-        //                     names.push(element.contract.name = "No Name")
-        //                 }
-        //             }
-        //         });
-        //         for (var i = 0; i < names.length; i++) {
-        //             var innerdiv = document.createElement('div');
-        //             innerdiv.className = 'first';
-        //             innerdiv.innerHTML = names[i]
-        //             // document.getElementById("second").appendChild(innerdiv)
-        //         }
-        //         document.getElementById("main").appendChild(document.getElementById("second"))
-
-        //         document.getElementById("myInput").addEventListener('focus', function () {
-        //             if (this.value == '') {
-        //                 this.value = ''
-        //             } else {
-        //                 this.value = ''
-        //                 document.getElementById("second").innerHTML = ''
-        //                 for (var i = 0; i < names.length; i++) {
-        //                     var innerdiv = document.createElement('div');
-        //                     innerdiv.className = 'first';
-        //                     innerdiv.innerHTML = names[i]
-        //                     // document.getElementById("second").appendChild(innerdiv)
-        //                 }
-        //             }
-        //         })
-
-        //         document.getElementById("submit").addEventListener('click', function () {
-        //             var unique = [], unique_address = []
-        //             var search_text = document.getElementById("myInput").value
-        //             document.getElementById("second").innerHTML = ''
-        //             var filteredarray = json.filter(element => { return element.contract.name == search_text })
-        //             console.log(filteredarray)
-        //             filteredarray.forEach(element => {
-        //                 if (!unique_address.includes(element.contract_address)) {
-        //                     unique_address.push(element.contract_address)
-        //                     unique.push(element)
-        //                 }
-        //             })
-        //             console.log(unique)
-        //             var nft = { "element": unique, "wallet_add": parameters[1] }
-        //             fetch('/searchwalletaddress', {
-        //                 method: 'POST',
-        //                 body: JSON.stringify(nft),
-        //                 headers: {
-        //                     'Content-type': 'application/json; charset=UTF-8'
-        //                 }
-        //             })
-        //                 .then(response => response.json())
-        //                 .then(json => {
-        //                     console.log(json)
-        //                     for (var i = 0; i < json.length; i++) {
-        //                         var thirddiv = document.createElement('div');
-        //                         thirddiv.className = 'thirddiv';
-        //                         thirddiv.id = "thirddiv"
-        //                         var imagediv = document.createElement('div');
-        //                         imagediv.className = 'imagediv';
-        //                         imagediv.id = "imagediv"
-        //                         var imagetag = document.createElement(format(json[i]));
-        //                         imagetag.className = 'image';
-        //                         imagetag.id = 'image'
-        //                         imagetag.src = ipfstoimg(json[i])
-        //                         imagediv.appendChild(imagetag)
-        //                         var textdiv = document.createElement('div');
-        //                         textdiv.className = 'textdiv';
-        //                         textdiv.id = "textdiv"
-        //                         var namediv = document.createElement('div');
-        //                         namediv.className = 'name';
-        //                         namediv.id = 'name'
-        //                         namediv.innerText = json[i].name
-        //                         textdiv.appendChild(namediv)
-        //                         var tokendiv = document.createElement('div');
-        //                         tokendiv.className = 'token';
-        //                         tokendiv.id = 'token'
-        //                         tokendiv.innerText = json[i].token_id
-        //                         textdiv.appendChild(tokendiv)
-        //                         var descriptiondiv = document.createElement('div');
-        //                         descriptiondiv.className = 'description';
-        //                         descriptiondiv.id = 'description'
-        //                         descriptiondiv.innerText = json[i].description
-        //                         textdiv.appendChild(descriptiondiv)
-        //                         thirddiv.appendChild(imagediv)
-        //                         thirddiv.appendChild(textdiv)
-        //                         document.getElementById("second").appendChild(thirddiv)
-        //                     }
-        //                 })
-
-        //             function format(t) {
-        //                 var url = t.cached_file_url
-        //                 if (url != null) {
-        //                     var type = url.split(".").pop()
-        //                     console.log(type)
-        //                     switch (type) {
-        //                         case "jpeg": return 'img'
-        //                             break;
-        //                         case "png": return 'img'
-        //                             break;
-        //                         case "jpg": return 'img'
-        //                             break;
-        //                         case "mp4": return 'video'
-        //                             break;
-        //                     }
-        //                 }
-        //                 else {
-        //                     return 'img'
-        //                 }
-
-        //             }
-
-        //             function ipfstoimg(x) {
-        //                 var meta = x.metadata
-        //                 if (meta != null) {
-        //                     var img = meta.image
-        //                     console.log(img)
-        //                     if (img.includes("https")) {
-        //                         return img
-        //                     }
-        //                     if (img.includes("https://cloudflare-ipfs.com")) {
-        //                         return img
-        //                     }
-        //                     else if (img.includes("ipfs")) {
-        //                         var extension = img.split("ipfs://").pop()
-        //                         console.log(extension)
-        //                         var imgurl = "https://ipfs.io/ipfs/" + extension
-        //                         return imgurl
-        //                     }
-        //                     else {
-        //                         return img
-        //                     }
-        //                 } else {
-        //                     return null
-        //                 }
-
-        //             }
-        //         })
-        //     })
-
-        // function autocomplete(inp, arr) {
-        //     var currentFocus;
-        //     inp.addEventListener("input", function (e) {
-        //         var a, b, i, val = this.value;
-        //         closeAllLists();
-        //         if (!val) { return false; }
-        //         currentFocus = -1;
-        //         a = document.createElement("DIV");
-        //         a.setAttribute("id", this.id + "autocomplete-list");
-        //         a.setAttribute("class", "autocomplete-items");
-        //         this.parentNode.appendChild(a);
-        //         /*for each item in the array...*/
-        //         for (i = 0; i < arr.length; i++) {
-        //             /*check if the item starts with the same letters as the text field value:*/
-        //             if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-        //                 /*create a DIV element for each matching element:*/
-        //                 b = document.createElement("DIV");
-        //                 /*make the matching letters bold:*/
-        //                 b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-        //                 b.innerHTML += arr[i].substr(val.length);
-        //                 /*insert a input field that will hold the current array item's value:*/
-        //                 b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-        //                 /*execute a function when someone clicks on the item value (DIV element):*/
-        //                 b.addEventListener("click", function (e) {
-        //                     /*insert the value for the autocomplete text field:*/
-        //                     inp.value = this.getElementsByTagName("input")[0].value;
-        //                     /*close the list of autocompleted values,
-        //                     (or any other open lists of autocompleted values:*/
-        //                     closeAllLists();
-        //                 });
-        //                 a.appendChild(b);
-        //             }
-        //         }
-        //     });
-        //     /*execute a function presses a key on the keyboard:*/
-        //     inp.addEventListener("keydown", function (e) {
-        //         var x = document.getElementById(this.id + "autocomplete-list");
-        //         if (x) x = x.getElementsByTagName("div");
-        //         if (e.keyCode == 40) {
-        //             /*If the arrow DOWN key is pressed,
-        //             increase the currentFocus variable:*/
-        //             currentFocus++;
-        //             /*and and make the current item more visible:*/
-        //             addActive(x);
-        //         } else if (e.keyCode == 38) { //up
-        //             /*If the arrow UP key is pressed,
-        //             decrease the currentFocus variable:*/
-        //             currentFocus--;
-        //             /*and and make the current item more visible:*/
-        //             addActive(x);
-        //         } else if (e.keyCode == 13) {
-        //             /*If the ENTER key is pressed, prevent the form from being submitted,*/
-        //             e.preventDefault();
-        //             if (currentFocus > -1) {
-        //                 /*and simulate a click on the "active" item:*/
-        //                 if (x) x[currentFocus].click();
-        //             }
-        //         }
-        //     });
-        //     function addActive(x) {
-        //         /*a function to classify an item as "active":*/
-        //         if (!x) return false;
-        //         /*start by removing the "active" class on all items:*/
-        //         removeActive(x);
-        //         if (currentFocus >= x.length) currentFocus = 0;
-        //         if (currentFocus < 0) currentFocus = (x.length - 1);
-        //         /*add class "autocomplete-active":*/
-        //         x[currentFocus].classList.add("autocomplete-active");
-        //     }
-        //     function removeActive(x) {
-        //         /*a function to remove the "active" class from all autocomplete items:*/
-        //         for (var i = 0; i < x.length; i++) {
-        //             x[i].classList.remove("autocomplete-active");
-        //         }
-        //     }
-        //     function closeAllLists(elmnt) {
-        //         /*close all autocomplete lists in the document,
-        //         except the one passed as an argument:*/
-        //         var x = document.getElementsByClassName("autocomplete-items");
-        //         for (var i = 0; i < x.length; i++) {
-        //             if (elmnt != x[i] && elmnt != inp) {
-        //                 x[i].parentNode.removeChild(x[i]);
-        //             }
-        //         }
-        //     }
-        //     /*execute a function when someone clicks in the document:*/
-        //     document.addEventListener("click", function (e) {
-        //         closeAllLists(e.target);
-        //     });
-        // }
-
-        // autocomplete(document.getElementById("myInput"), names);
     </script>
 </body>
 
