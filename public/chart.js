@@ -13,7 +13,7 @@ var booleanvalue = false
 var tp = { "Creation": { $exists: true } }
 loader("none", "flex", "A11")
 
-var value = localStorage.getItem("data")
+var value = localStorage.getItem("name")
 // console.log(JSON.parse(value))
 // console.log(value)
 var json = JSON.parse(value)
@@ -43,14 +43,14 @@ try {
         var totalvalue = document.querySelector(valuename)
         // console.log(title)
         switch (chart.Chart) {
-            case "Line":
+            // case "Line":
                 // line(json[chart.Xaxis], chart.Maxis, chart.Naxis, chart.sort)
-                window[chart.id] = createline(chart.id)
+                // window[chart.id] = createline(chart.id)
                 // updateline(chart.id, newjson)
                 // febuttons(chart)
-                title.innerHTML = chart.Xaxis + " vs " + chart.Maxis
+                // title.innerHTML = chart.Xaxis + " vs " + chart.Maxis
 
-                break
+                // break
             case "Bar":
                 // console.log(json[chart.Xaxis])
                 bar(json[chart.Xaxis], chart.Yaxis)
@@ -345,13 +345,13 @@ function updatecharts(json, idval) {
                     updatestackbar(chart.id, newjson)
                 }
 
-            case "Line":
+            // case "Line":
                 // line(json[chart.Xaxis], chart.Maxis, chart.Naxis, chart.sort)
-                window[chart.id] = createline(chart.id)
+                // window[chart.id] = createline(chart.id)
                 // updateline(chart.id, newjson)
                 // febuttons(chart)
-                title.innerHTML = chart.Xaxis + " vs " + chart.Maxis
-                break
+                // title.innerHTML = chart.Xaxis + " vs " + chart.Maxis
+                // break
         }
     })
 }

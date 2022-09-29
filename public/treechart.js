@@ -110,7 +110,7 @@ return charttree
         treemap=[], truncatedtreemap=[] 
         var i=0 
         data.forEach(function(tree){ 
-            // console.log(tree)
+            console.log(tree)
             str=tree.name; 
             // console.log(str)
             UniqueNamelength=str.length; 

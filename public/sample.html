@@ -3,24 +3,61 @@
 
 <head>
     <title></title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.14.3/xlsx.full.min.js"></script>
 </head>
 
 <body>
+    <input type="file" name="file" id="file">
+    <label for="name"><b>SheetName:</b></label>
+    <input type="text" id="SheetName" placeholder="Enter SheetName" name="name" required>
+    <button type="submit" id="submit" onclick="submit()">Submit</button>
+    <p id="text"></p>
     <script>
-        function1()
-        function function1() {
-            const nam = { "username": "username" }
+        var json_array, workbook
+        var ExcelToJSON = function (json_array) {
+            this.parseExcel = function (file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var data = e.target.result;
+                    workbook = XLSX.read(data, {
+                        type: 'binary'
+                    });
+                };
+                reader.onerror = function (ex) {
+                    // console.log(ex);
+                    alert("Failed to load");
+                };
+                reader.readAsBinaryString(file);
+            };
+        };
 
-            fetch('/file', {
+        async function handleFileSelect(evt) {
+            var files = evt.target.files;
+            var xl2json = await new ExcelToJSON(json_array);
+            xl2json.parseExcel(files[0]);
+        }
+
+        document.getElementById('file').addEventListener('change', handleFileSelect, false);
+
+        function submit() {
+            console.log(workbook)
+            var sheetname = document.getElementById("SheetName").value
+            console.log(sheetname)
+            var data = [{ "workbook": workbook }, { "sheetname": sheetname }]
+            fetch('/xlsxupload', {
                 method: 'POST',
-                body: JSON.stringify(nam),
+                body: JSON.stringify(data),
                 headers: {
                     'Content-type': 'application/json; charset=UTF-8'
                 }
             })
                 .then(response => response.json())
-                .then(submitjson => {
-                    console.log(submitjson)
+                .then(json => {
+                    console.log(json)
+                    document.getElementById("text").innerHTML = json.message
+                })
+                .catch(error => {
+                    console.error(error)
                 })
         }
     </script>

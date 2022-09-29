@@ -17,7 +17,8 @@
     "hashmap": "^2.4.0",
     "init": "^0.1.2",
     "mongodb": "^4.8.1",
-    "node-fetch": "^3.2.10"
+    "node-fetch": "^3.2.10",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {},
   "scripts": {
