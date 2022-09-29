@@ -1,0 +1,140 @@
+import axios from "axios";
+import { MongoClient } from "mongodb";
+
+//connect to the mongodb host
+var url = "mongodb://localhost:27017/";
+const client = new MongoClient(url);
+
+const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+var add_, tx, token_details;
+var obj = new Array;
+
+//Get token Transaction details
+async function getTransactions(address, nfts, i) {
+  var id = nfts[i].token_id
+
+  var link = "https://api.nftport.xyz/v0/transactions/nfts/" + address + "/" + id
+
+  const options = {
+    method: 'GET',
+    url: link,
+    params: {
+      chain: 'ethereum',
+      type: 'all'
+    },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: '74aa6344-267c-46ef-aaa5-c7cfbf0eaf5c'
+    }
+  };
+
+  await axios.request(options).then(function (response) {
+    tx = response.data;
+
+  }).catch(function (error) {
+      console.error(error);
+  });
+}
+
+
+//Get details of particular token of the contract
+async function getTokenDetails(address, nfts, i) {
+  var id = nfts[i].token_id
+  var link = "https://api.nftport.xyz/v0/nfts/" + address + "/" + id
+
+  const options = {
+    method: 'GET',
+    url: link,
+    params: {
+      chain: 'ethereum',
+      include: 'all',
+      refresh_metadata: 'true'
+    },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: '74aa6344-267c-46ef-aaa5-c7cfbf0eaf5c'
+    }
+  };
+  await axios.request(options).then(function (response) {
+    token_details = response.data;
+
+  }).catch(function (error) {
+      console.error(error);
+  });
+}
+
+
+async function getEachNFTDetails(address, contractDetails) {
+  var data = JSON.parse(contractDetails);
+  var nfts = data.nfts;
+  for (var i = 0; i < nfts.length; i++) {
+    add_ =  address + "/" + nfts[i].token_id 
+    await getTokenDetails(address, nfts, i);
+    await getTransactions(address, nfts, i);
+    var newData = {"contractAddress/token_id": add_, "token_details":token_details, "transaction":tx};
+    obj.push(newData);
+    console.log(newData)
+    console.log(obj.length)
+
+    async function run() {
+      try {
+        await client.connect();
+        const database = client.db('NFT_Contract' + "_" + address);
+        const nftsDetails = database.collection('Details_of_Token');
+        // insert the response.data into given db collection
+        const query = newData
+        const nft = await nftsDetails.insertOne(query);
+        console.log(nft);
+      } finally {
+        // Ensures that the client will close when you finish/error
+        await client.close();
+      }
+    }
+    run().catch(console.dir);
+
+  }
+}
+
+//Get the contract details 
+async function getContractDetails(address) {
+  const options = {
+      method: 'GET',
+      url: 'https://api.nftport.xyz/v0/nfts/' + address,
+      params: { 
+          chain: 'ethereum', 
+          include: 'all', 
+          refresh_metadata: 'true' 
+      },
+      headers: {
+          'Content-Type': 'application/json',
+          Authorization: '74aa6344-267c-46ef-aaa5-c7cfbf0eaf5c'
+      }
+  };
+   await axios.request(options).then(response => {
+      // console.log(response)
+      var data = JSON.stringify(response.data)
+      getEachNFTDetails(address, data)
+
+  }).catch(function (error) {
+      console.error(error);
+  });
+}
+
+
+var address = new Array
+
+//pass the array of contract address to "address" array
+address = ["0x2c3fc1d826bc12027d05fbe3aeace0a2453bf9fd"];
+
+
+
+//Delay loop 200000 msec
+const loop = async () => {
+  for (const add of address) {
+  await getContractDetails(add);
+  await wait(10000);
+  console.log(obj)
+}
+}
+
+loop()

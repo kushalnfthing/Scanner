@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            width: 100vw;
+            margin: 0px;
+            height: 100vh;
+        }
+        .project{
+            display: flex;
+            width: 100%;
+            height: 10%;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+        }
+        .image{
+            display: flex;
+            width: 100%;
+            height: 30%;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+        }
+        .json{
+            display: flex;
+            width: 100%;
+            height: 50%;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="project" id="project_name"></div>
+    <div class="image" id="image_name"></div>
+    <!-- <div class="json" id="json_array"></div> -->
+    <pre class="json" id="json_array"></pre>
+    <script>
+        var parameters = location.search.split('?');
+        console.log(parameters[1])
+        var value = localStorage.getItem("view_data")
+        var newjson = JSON.parse(value)
+        console.log(newjson)
+        fetch('/view', {
+            method: 'POST',
+            body: JSON.stringify(newjson),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8'
+            }
+        })
+            .then(response => response.json())
+            .then(json => {
+                console.log(json)
+                document.getElementById("project_name").innerText=json[0].name
+                document.getElementById("image_name").innerHTML=json[0].image
+                document.getElementById("json_array").textContent=JSON.stringify(json[0],null,'\t')
+            })
+    </script>
+</body>
+
+</html>

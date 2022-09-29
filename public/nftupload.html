@@ -47,24 +47,7 @@
                 items.push(row);
                 console.log(items)
             });
-            // console.log(csv)
-            // var lines = csv.split("\n");
-            // console.log(lines)
-            // var result = [];
-            // var headers = lines[0].split(",");
-            // console.log(headers)
-            // for (var i = 1; i < lines.length; i++) {
-            //     var obj = {};
-            //     var currentline = lines[i].split(",");
-            //     // console.log(currentline)
-            //     for (var j = 0; j < headers.length; j++) {
-            //         obj[headers[j]] = currentline[j];
-            //     }
-            //     console.log(obj)
-            //     result.push(obj);
-            // }
-            // console.log(result)
-            fetch('/file', {
+            fetch('/nftdetails', {
                 method: 'POST',
                 body: JSON.stringify(items),
                 headers: {
@@ -73,9 +56,10 @@
             })
                 .then(response => response.json())
                 .then(json => {
-                    console.log(json)
-                    var data = { "name": json }
-                    localStorage.setItem("name", JSON.stringify(data));
+                    console.log(json.type_array)
+                    console.log(json.formattype_array)
+                    var data = { "name": json.type_array, "type":json.formattype_array }
+                    localStorage.setItem("data", JSON.stringify(data));
                     window.location.href = "http://localhost:3000/chart.html"
                 })
                 .catch(error => {

@@ -13,214 +13,222 @@ var booleanvalue = false
 var tp = { "Creation": { $exists: true } }
 loader("none", "flex", "A11")
 
-var value = localStorage.getItem("name")
-console.log(JSON.parse(value))
+var value = localStorage.getItem("data")
+// console.log(JSON.parse(value))
 // console.log(value)
-var json=JSON.parse(value)
+var json = JSON.parse(value)
 // fetch('/contract', {
 //     method: 'POST',
-//     body: value,
+//     body: JSON.stringify(),
 //     headers: {
 //         'Content-type': 'application/json; charset=UTF-8'
 //     }
 // })
-    // .then(response => response.json())
-    // .then(json => {
-        try {
+//     .then(response => response.json())
+//     .then(json => {
+try {
 
-            loader("block", "none", "A11")
+    loader("block", "none", "A11")
 
-            maindata = json;
-            // console.log(maindata)
-            // counter(json)
-            chartselection.forEach(function (chart) {
-                // console.log(chart)
-                var titlename = '#' + chart.id + 'title'
-                // console.log(titlename) 
-                var title = document.querySelector(titlename)
-                var valuename = '#' + chart.id + 'value'
-                // console.log(titlename) 
-                var totalvalue = document.querySelector(valuename)
-                // console.log(title)
-                switch (chart.Chart) {
-                    case "Bar":
-                        // console.log(json[chart.Xaxis])
-                        bar(json[chart.Xaxis], chart.Yaxis)
-                        window[chart.id] = createbar(chart.id, chart.Xaxis)
-                        updatebar(chart.id, barxaxis, baryaxis)
-                        febuttons(chart)
-                        title.innerHTML = chart.Xaxis + " vs " + counttofeature(chart.Yaxis)
+    maindata = json;
+    console.log(maindata)
+    // counter(json)
+    chartselection.forEach(function (chart) {
+        // console.log(chart)
+        var titlename = '#' + chart.id + 'title'
+        // console.log(titlename) 
+        var title = document.querySelector(titlename)
+        var valuename = '#' + chart.id + 'value'
+        // console.log(titlename) 
+        var totalvalue = document.querySelector(valuename)
+        // console.log(title)
+        switch (chart.Chart) {
+            case "Line":
+                // line(json[chart.Xaxis], chart.Maxis, chart.Naxis, chart.sort)
+                window[chart.id] = createline(chart.id)
+                // updateline(chart.id, newjson)
+                // febuttons(chart)
+                title.innerHTML = chart.Xaxis + " vs " + chart.Maxis
 
+                break
+            case "Bar":
+                // console.log(json[chart.Xaxis])
+                bar(json[chart.Xaxis], chart.Yaxis)
+                window[chart.id] = createbar(chart.id, chart.Xaxis)
+                updatebar(chart.id, barxaxis, baryaxis)
+                febuttons(chart)
+                title.innerHTML = chart.Xaxis + " vs " + chart.Yaxis
+
+                break
+            case "Pie":
+                // console.log(json)
+                pie(json[chart.Xaxis], chart.Yaxis)
+                window[chart.id] = createpie(chart.id, chart.Xaxis)
+                updatepie(chart.id, piexaxis, pieyaxis)
+                febuttons(chart)
+                title.innerHTML = chart.Xaxis + " vs " + chart.Yaxis
+
+                break
+
+            case "Treemap":
+                // treemapnew(json[chart.Xaxis], chart.Yaxis)
+                // console.log(json[chart.Xaxis])
+                treemapnew(json[chart.Xaxis], chart.Yaxis)
+                window[chart.id] = createtree(chart.id, chart.Xaxis)
+                updatetree(chart.id)
+                febuttons(chart)
+                title.innerHTML = chart.Xaxis + " vs " + chart.Yaxis
+
+                break
+
+            case "StackedBar":
+                var node = document.getElementById(chart.id)
+                var chartcon = node.parentNode
+                oriwidth = chartcon.offsetWidth
+                // console.log(chart.Maxis)
+                var tempjson = json[chart.Xaxis].slice(0, chart.value)
+                stackbar(tempjson, chart.Maxis, chart.Naxis, chart.sort)
+                window[chart.id] = createstackedbar(chart.id, chart.Xaxis)
+                updatestackbar(chart.id, newjson)
+                febuttons(chart)
+                title.innerHTML = chart.Xaxis + " vs " + chart.Maxis
+
+                break
+
+            case "Info":
+                var node = document.getElementById(chart.id)
+                title.innerHTML = chart.title
+                switch (chart.type) {
+                    case "total":
+                        var total
+                        // console.log(chart.parameter)
+                        // for (i = 0; i < json[chart.Xaxis].length; i++) {
+                        //    var j=json[chart.Xaxis][i]
+                        //    console.log(j[chart.parameter])
+                        // }
+                        total = json[chart.Xaxis].reduce(function (previousvalue, currentvalue) {
+                            return previousvalue + currentvalue[chart.parameter];
+                        }, 0);
+                        // console.log(total);
+                        totalvalue.innerHTML = total
                         break
-                    case "Pie":
-                        // console.log(json)
-                        pie(json[chart.Xaxis], chart.Yaxis)
-                        window[chart.id] = createpie(chart.id, chart.Xaxis)
-                        updatepie(chart.id, piexaxis, pieyaxis)
-                        febuttons(chart)
-                        title.innerHTML = chart.Xaxis + " vs " + counttofeature(chart.Yaxis)
 
+                    case "highest":
+                        var first = json[chart.Xaxis].sort(sortByProperty(chart.parameter))
+                        var highest = first[0][chart.parameter]
+                        totalvalue.innerHTML = highest
                         break
-
-                    case "Treemap":
-                        // treemapnew(json[chart.Xaxis], chart.Yaxis)
-                        // console.log(json[chart.Xaxis])
-                        treemapnew(json[chart.Xaxis], chart.Yaxis)
-                        window[chart.id] = createtree(chart.id, chart.Xaxis)
-                        updatetree(chart.id)
-                        febuttons(chart)
-                        title.innerHTML = chart.Xaxis + " vs " + counttofeature(chart.Yaxis)
-
-                        break
-
-                    case "StackedBar":
-                        var node = document.getElementById(chart.id)
-                        var chartcon = node.parentNode
-                        oriwidth = chartcon.offsetWidth
-                        // console.log(chart.Maxis)
-                        var tempjson = json[chart.Xaxis].slice(0, chart.value)
-                        stackbar(tempjson, chart.Maxis, chart.Naxis, chart.sort)
-                        window[chart.id] = createstackedbar(chart.id, chart.Xaxis)
-                        updatestackbar(chart.id, newjson)
-                        febuttons(chart)
-                        title.innerHTML = chart.Xaxis + " vs " + chart.Maxis
-
-                        break
-
-                    case "Info":
-                        var node = document.getElementById(chart.id)
-                        title.innerHTML = chart.title
-                        switch (chart.type) {
-                            case "total":
-                                var total
-                                // console.log(chart.parameter)
-                                // for (i = 0; i < json[chart.Xaxis].length; i++) {
-                                //    var j=json[chart.Xaxis][i]
-                                //    console.log(j[chart.parameter])
-                                // }
-                                total = json[chart.Xaxis].reduce(function (previousvalue, currentvalue) {
-                                    return previousvalue + currentvalue[chart.parameter];
-                                }, 0);
-                                // console.log(total);
-                                totalvalue.innerHTML = total
-                                break
-
-                            case "highest":
-                                var first = json[chart.Xaxis].sort(sortByProperty(chart.parameter))
-                                var highest = first[0][chart.parameter]
-                                totalvalue.innerHTML = highest
-                                break
-                        }
                 }
+        }
 
 
-                function febuttons(chart) {
-                    //debugger
-                    var chartname = document.getElementById(chart.id)
-                    var parent = chartname.parentNode.parentNode.parentNode
-                    var value = chart.Yaxis;
-                    var chartid = parent.querySelector('canvas').id
-                    var febtn = parent.querySelectorAll('.febtn')
-                    var titlename = '#' + chart.id + 'title'
-                    //console.log(titlename) 
-                    var title = document.querySelector(titlename)
-                    var charttype
+        function febuttons(chart) {
+            //debugger
+            var chartname = document.getElementById(chart.id)
+            var parent = chartname.parentNode.parentNode.parentNode
+            var value = chart.Yaxis;
+            var chartid = parent.querySelector('canvas').id
+            var febtn = parent.querySelectorAll('.febtn')
+            var titlename = '#' + chart.id + 'title'
+            //console.log(titlename) 
+            var title = document.querySelector(titlename)
+            var charttype
 
-                    febtn.forEach(function (btn) {
-                        // console.log(btn) 
-                        if (btn.value == value & chart.Chart != "StackedBar") {
-                            switch (btn.value) {
-                                case "count":
+            febtn.forEach(function (btn) {
+                // console.log(btn) 
+                if (btn.value == value & chart.Chart != "StackedBar") {
+                    switch (btn.value) {
+                        case "count":
 
-                                    btn.style.color = "white"
-                                    btn.style.backgroundColor = "blue"
-                                    break
+                            btn.style.color = "white"
+                            btn.style.backgroundColor = "blue"
+                            break
 
-                                case "Error":
-                                case "NormalError":
-                                case "CriticalErron":
+                        case "Error":
+                        case "NormalError":
+                        case "CriticalErron":
 
-                                    btn.style.color = "white"
-                                    btn.style.backgroundColor = "red"
-                                    break
-                            }
-                        }
-                    })
+                            btn.style.color = "white"
+                            btn.style.backgroundColor = "red"
+                            break
+                    }
                 }
             })
+        }
+    })
 
-            var dropdown = document.getElementsByClassName("dropdown-btn");
-            var i;
-            keys = [];
-            for (var k in json) {
-                // if (k != "Values")
-                keys.push(k)
-            }
-            // console.log(keys)
-            for (i = 0; i < keys.length; i++) {
-                var lielement = document.createElement("li")
-                lielement.id = "lidrop" + keys[i]
-                var btn = document.createElement("button")
-                btn.className = "dropdown-btn";
-                btn.innerHTML = '<btn>' + keys[i] + '<btn>'
-                var divelement = document.createElement("div")
-                divelement.id = "drop" + keys[i]
-                divelement.className = "dropdown-container"
-                lielement.appendChild(btn);
-                lielement.appendChild(divelement);
-                document.getElementById("ulelement").appendChild(lielement);
-                var anchor = document.createElement("a")
-                // console.log(keys[i])
-                anchor.id = keys[i];
-                divelement.appendChild(anchor);
-            }
+    var dropdown = document.getElementsByClassName("dropdown-btn");
+    var i;
+    keys = [];
+    for (var k in json) {
+        // if (k != "Values")
+        keys.push(k)
+    }
+    // console.log(keys)
+    for (i = 0; i < keys.length; i++) {
+        var lielement = document.createElement("li")
+        lielement.id = "lidrop" + keys[i]
+        var btn = document.createElement("button")
+        btn.className = "dropdown-btn";
+        btn.innerHTML = '<btn>' + keys[i] + '<btn>'
+        var divelement = document.createElement("div")
+        divelement.id = "drop" + keys[i]
+        divelement.className = "dropdown-container"
+        lielement.appendChild(btn);
+        lielement.appendChild(divelement);
+        document.getElementById("ulelement").appendChild(lielement);
+        var anchor = document.createElement("a")
+        // console.log(keys[i])
+        anchor.id = keys[i];
+        divelement.appendChild(anchor);
+    }
+    for (i = 0; i < dropdown.length; i++) {
+        dropdown[i].addEventListener("click", function () {
             for (i = 0; i < dropdown.length; i++) {
-                dropdown[i].addEventListener("click", function () {
-                    for (i = 0; i < dropdown.length; i++) {
-                        if (dropdown[i].classList.contains('active')) {
-                            //this.classList.remove('active')
-                            if (dropdown[i] != this) {
-                                var dropdownContent = dropdown[i].nextElementSibling;
-                                dropdownContent.style.display = "none";
-                                dropdown[i].classList.toggle("active")
-                            }
-                        }
-                    }
-                    this.classList.toggle("active");
-                    var dropdownContent = this.nextElementSibling;
-                    //console.log(dropdownContent) 
-                    if (dropdownContent.style.display === "block") {
-                        //console.log("S")
+                if (dropdown[i].classList.contains('active')) {
+                    //this.classList.remove('active')
+                    if (dropdown[i] != this) {
+                        var dropdownContent = dropdown[i].nextElementSibling;
                         dropdownContent.style.display = "none";
-                    } else {
-                        //console.log("p") 
-                        dropdownContent.style.display = "block";
+                        dropdown[i].classList.toggle("active")
                     }
-                });
-            }
-
-            for (i = 0; i < keys.length; i++) {
-                for (j = 0; j < json[keys[i]].length; j++) {
-                    var iDiv = document.createElement('div');
-                    iDiv.className = 'block1';
-                    var checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    // console.log(json[keys[i]])
-                    checkbox.className = keys[i];
-                    checkbox.value = json[keys[i]][j].name;
-                    var opt = document.createElement('option');
-                    opt.className = 'opcb'
-                    opt.innerHTML = '<option id="' + j + '">' + json[keys[i]][j].name + '</option>'
-                    //iDiv.className = 'cb'; 
-                    iDiv.appendChild(checkbox);
-                    iDiv.appendChild(opt)
-                    document.getElementById(keys[i]).appendChild(iDiv);
                 }
             }
-        } catch (error) {
-            console.log(error);
+            this.classList.toggle("active");
+            var dropdownContent = this.nextElementSibling;
+            //console.log(dropdownContent) 
+            if (dropdownContent.style.display === "block") {
+                //console.log("S")
+                dropdownContent.style.display = "none";
+            } else {
+                //console.log("p") 
+                dropdownContent.style.display = "block";
+            }
+        });
+    }
+
+    for (i = 0; i < keys.length; i++) {
+        for (j = 0; j < json[keys[i]].length; j++) {
+            var iDiv = document.createElement('div');
+            iDiv.className = 'block1';
+            var checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            // console.log(json[keys[i]])
+            checkbox.className = keys[i];
+            checkbox.value = json[keys[i]][j].name;
+            var opt = document.createElement('option');
+            opt.className = 'opcb'
+            opt.innerHTML = '<option id="' + j + '">' + json[keys[i]][j].name + '</option>'
+            //iDiv.className = 'cb'; 
+            iDiv.appendChild(checkbox);
+            iDiv.appendChild(opt)
+            document.getElementById(keys[i]).appendChild(iDiv);
         }
-    // });
+    }
+} catch (error) {
+    console.log(error);
+}
+// });
 
 function expand(buttony, chart) {
     var x = buttony.parentNode.parentNode.parentElement;
@@ -336,6 +344,14 @@ function updatecharts(json, idval) {
                     stackbar(tempjson, chart.Maxis, chart.Naxis, chart.sort)
                     updatestackbar(chart.id, newjson)
                 }
+
+            case "Line":
+                // line(json[chart.Xaxis], chart.Maxis, chart.Naxis, chart.sort)
+                window[chart.id] = createline(chart.id)
+                // updateline(chart.id, newjson)
+                // febuttons(chart)
+                title.innerHTML = chart.Xaxis + " vs " + chart.Maxis
+                break
         }
     })
 }
@@ -383,12 +399,12 @@ function loader(x, y, val) {
     //loader[i].style.display = y;
     //}
 }
-function counttofeature(count) {
-    if (count == 'count') {
-        return "Features"
-    }
-    else {
-        return count
-    }
-}
+// function counttofeature(count) {
+//     if (count == 'count') {
+//         return "Features"
+//     }
+//     else {
+//         return count
+//     }
+// }
 

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+            body {
+            width: 100vw;
+            margin: 0px;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <!-- <form action="action_page.php" method="post"> -->
+    <div class="container">
+        <label for="uname"><b>Username</b></label>
+        <input type="text" id="user" placeholder="Enter Username" name="uname" required>
+
+        <!-- <label for="psw"><b>Password</b></label>
+          <input type="password" placeholder="Enter Password" name="psw" required> -->
+
+        <button type="submit" id="login" onclick=fetchclient()>Login</button>
+        <!-- <label>
+            <input type="checkbox" checked="checked" name="remember"> Remember me
+          </label> -->
+    </div>
+    <!-- </form> -->
+    <script>
+        function fetchclient() {
+            var client_value = document.getElementById("user").value
+            console.log(client_value)
+            var text = { "text": client_value }
+            fetch('/clientlogin', {
+                method: 'POST',
+                body: JSON.stringify(text),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                }
+            })
+                .then(response => response.json())
+                .then(json => {
+                    console.log(json)
+                    // var current_data = JSON.parse(json[0])
+                    localStorage.setItem("client_data", JSON.stringify(json[0]));
+                    window.location.href = "http://localhost:3000/client.html?" + json[0].Brand
+                })
+        }
+    </script>
+</body>
+
+</html>

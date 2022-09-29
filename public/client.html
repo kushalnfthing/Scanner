@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            width: 100vw;
+            margin: 0px;
+            height: 100vh;
+        }
+
+        .client {
+            display: flex;
+            width: 100%;
+            height: 5%;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+        }
+
+        .image {
+            display: flex;
+            width: 100%;
+            height: 5%;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+        }
+
+        .json {
+            display: flex;
+            width: 100%;
+            height: 45%;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+            overflow-y: auto;
+            margin: 0px;
+        }
+
+        .divtable {
+            display: flex;
+            width: 70%;
+            height: 40%;
+            justify-content: center;
+            /* align-items: center;
+            align-content: center; */
+            overflow-x: auto;
+            margin: auto;
+        }
+
+        table,
+        th,
+        td {
+            border: solid 1px #ddd;
+            border-collapse: collapse;
+            padding: 2px 3px;
+            text-align: center;
+            overflow-y: auto;
+        }
+
+        th {
+            font-weight: bold;
+        }
+
+        .pagebtn {
+            display: flex;
+            width: 100%;
+            height: 5%;
+        }
+
+        .prevpage {
+            display: flex;
+            width: 50%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="client" id="client_name"></div>
+    <div class="image" id="image_name"></div>
+    <!-- <div class="json" id="json_array"></div> -->
+    <pre class="json" id="json_array"></pre>
+    <div class="divtable" id="tabledata">
+    </div>
+    <div class="pagebtn">
+        <div class="prevpage">
+            <button class="pagination-button" id="prev-button">Previous</button>
+        </div>
+        <div class="prevpage">
+            <button class="pagination-button" id="next-button">Next</button>
+        </div>
+    </div>
+    <script>
+        var parameters = location.search.split('?');
+        console.log(parameters[1])
+        var value = localStorage.getItem("client_data")
+        var newjson = JSON.parse(value)
+        console.log(newjson)
+        fetch('/clientdetail', {
+            method: 'POST',
+            body: JSON.stringify(newjson),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8'
+            }
+        })
+            .then(response => response.json())
+            .then(json => {
+                console.log(json)
+                document.getElementById("client_name").innerText = json[0].stats[0].name
+                document.getElementById("image_name").innerHTML = json[0].stats[0].image
+                document.getElementById("json_array").textContent = JSON.stringify(json[0].stats[0], null, '\t')
+
+                const pageSize = 10;
+                let curPage = 1;
+
+                const table = document.createElement("table");
+                let result = ''
+                result = `<th>${'type'}</th>
+                    <th>${'buyer_address'}</th>
+                    <th>${'quantity'}</th>
+                    <th>${'price_details'}</th>
+                    <th>${'transaction_date'}</th>
+                    <th>${'marketplace'}</th>`
+                json[1].transactions.filter((row, index) => {
+                    let start = (curPage - 1) * pageSize;
+                    let end = curPage * pageSize;
+                    if (index >= start && index < end) return true;
+                }).forEach(c => {
+                    var price_details = c.price_details
+                    if (price_details == undefined) {
+                        price_details = "undefined"
+                    } else {
+                        price_details = c.price_details.price_usd
+                    }
+                    result +=
+                        `<tr>
+                        <td>${c.type}</td>
+                        <td>${c.buyer_address}</td>
+                        <td>${c.quantity}</td>
+                        <td>${price_details}</td>
+                        <td>${c.transaction_date}</td>
+                        <td>${c.marketplace}</td>
+                        </tr>`;
+                });
+                table.innerHTML = result;
+
+                const divShowData = document.getElementById('tabledata');
+                divShowData.appendChild(table);
+
+                document.querySelector('#next-button').addEventListener('click', nextPage, false);
+                document.querySelector('#prev-button').addEventListener('click', previousPage, false);
+
+                function previousPage() {
+                    if (curPage > 1) curPage--;
+                    renderTable();
+                }
+
+                function nextPage() {
+                    if ((curPage * pageSize) < json[1].transactions.length) curPage++;
+                    renderTable();
+                }
+
+                function renderTable() {
+                    // create html
+                    let result = ''
+                    result = `<th>${'type'}</th>
+                    <th>${'buyer_address'}</th>
+                    <th>${'quantity'}</th>
+                    <th>${'price_details'}</th>
+                    <th>${'transaction_date'}</th>
+                    <th>${'marketplace'}</th>`
+                    json[1].transactions.filter((row, index) => {
+                        let start = (curPage - 1) * pageSize;
+                        let end = curPage * pageSize;
+                        if (index >= start && index < end) return true;
+                    }).forEach(c => {
+                        var price_details = c.price_details
+                        if (price_details == undefined) {
+                            price_details = "undefined"
+                        } else {
+                            price_details = c.price_details.price_usd
+                        }
+                        result +=
+                            `<tr>
+                        <td>${c.type}</td>
+                        <td>${c.buyer_address}</td>
+                        <td>${c.quantity}</td>
+                        <td>${price_details}</td>
+                        <td>${c.transaction_date}</td>
+                        <td>${c.marketplace}</td>
+                        </tr>`;
+                    });
+                    table.innerHTML = result;
+                }
+
+                // var transcationno = json[1].transactions.slice(0, 10)
+                // console.log(transcationno)
+                // var specific_key = ["type", "buyer_address", "quantity", "price_details", "transaction_date", "marketplace"]
+                // let oldcol = [];
+                // for (let i = 0; i < transcationno.length; i++) {
+                //     for (let key in transcationno[i]) {
+                //         if (oldcol.indexOf(key) === -1) {
+                //             oldcol.push(key);
+                //         }
+                //     }
+                // }
+                // console.log(oldcol)
+                // var col = []
+                // var arr = oldcol.filter((e) => {
+                //     specific_key.forEach((item) => {
+                //         if (item == e) {
+                //             col.push(e)
+                //         }
+                //     })
+                // })
+                // console.log(col)
+                // Create a table.
+                // const table = document.createElement("table");
+                // // Create table header row using the extracted headers above.
+                // let tr = table.insertRow(-1);              // table row.
+                // for (var k = 0; k < col.length; k++) {
+                //     let th = document.createElement("th");      // table header.
+                //     th.innerHTML = col[k];
+                //     tr.appendChild(th);
+                // }
+                // // add json data to the table as rows.
+                // for (let i = 0; i < transcationno.length; i++) {
+                //     tr = table.insertRow(-1);
+                //     for (let j = 0; j < col.length; j++) {
+                //         let tabCell = tr.insertCell(-1);
+                //         if (col[j] == "price_details") {
+                //             if (transcationno[i][col[j]] == undefined) {
+                //                 // console.log(transcationno[i][col[j]])
+                //                 tabCell.innerHTML = "undefined"
+                //             } else {
+                //                 var price_details = transcationno[i][col[j]].price_usd
+                //                 // console.log(price_details)
+                //                 tabCell.innerHTML = price_details
+                //             }
+                //         } else {
+                //             tabCell.innerHTML = transcationno[i][col[j]]
+                //         }
+                //     }
+                // }
+                // Now, add the newly created table with json data, to a container.
+                // const divShowData = document.getElementById('tabledata');
+                // divShowData.appendChild(table);
+            })
+    </script>
+</body>
+
+</html>

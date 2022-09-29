@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            width: 100vw;
+            margin: 0px;
+            height: 100vh;
+        }
+
+        .maindiv {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 50%;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+        }
+
+        .categorybtn {
+            margin: 12px 12px 12px 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="maindiv" id="maindiv"></div>
+    <script>
+        fetch('/category', {
+            method: 'POST',
+            body: JSON.stringify(),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8'
+            }
+        })
+            .then(response => response.json())
+            .then(json => {
+                console.log(json)
+                var unique_sector = []
+                json.forEach((e) => {
+                    if (!unique_sector.includes(e.Sector)) {
+                        unique_sector.push(e.Sector)
+                    }
+                })
+                console.log(unique_sector)
+                for (var i = 0; i < unique_sector.length; i++) {
+                    var categorybtn = document.createElement("button")
+                    categorybtn.className = "categorybtn"
+                    categorybtn.innerText = unique_sector[i]
+                    categorybtn.value = unique_sector[i]
+                    categorybtn.addEventListener('click', function () {
+                        console.log(this.value)
+                        console.log(json)
+                        var filteredcategory = json.filter(element => { return element.Sector == this.value })
+                        console.log(filteredcategory)
+                        fetch('/statisticaldata', {
+                            method: 'POST',
+                            body: JSON.stringify(filteredcategory),
+                            headers: {
+                                'Content-type': 'application/json; charset=UTF-8'
+                            }
+                        })
+                            .then(response => response.json())
+                            .then(json => {
+                                console.log(json)
+                                var data = { "name": json }
+                                localStorage.setItem("name", JSON.stringify(data));
+                                window.location.href = "http://localhost:3000/chart.html"
+                            })
+                    })
+                    document.getElementById("maindiv").appendChild(categorybtn)
+                }
+            })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            width: 100vw;
+            margin: 0px;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <label for="uname"><b>Wallet Address</b></label>
+        <input type="text" id="address" placeholder="Enter address" name="addname" required>
+        <button type="submit" id="submit" onclick=fetchclient()>Submit</button>
+    </div>
+    <script>
+        function fetchclient() {
+            var address_value = document.getElementById("address").value
+            console.log(address_value)
+            var add = { "address": address_value }
+            window.location.href = "http://localhost:3000/wallet.html?" + address_value
+        }
+    </script>
+</body>
+
+</html>

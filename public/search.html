@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            width: 100vw;
+            margin: 0px;
+            height: 100vh;
+        }
+
+        .search {
+            display: flex;
+            width: 100%;
+            height: 10%;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+            order: 1
+        }
+
+        .middle {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 20%;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+            order: 2;
+            overflow-y: auto
+        }
+
+        .first {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+            order: 1
+        }
+
+        .checkboxes {
+            width: 2%
+        }
+
+        .option {
+            width: 40%
+        }
+
+        .floor_option {
+            width: 20%
+        }
+
+        .compare {
+            display: flex;
+            width: 100%;
+            height: 10%;
+            justify-content: center;
+            align-items: center;
+            align-content: center;
+            order: 3
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main" style="display:flex;width:100%;height:100%;flex-direction:column;">
+        <div class="search">
+            <input type="search" id="mySearch" onsearch="closefunction()">
+            <button onclick="search()">Search</button>
+        </div>
+        <div class="compare">
+            <button id="compare" style="display:none" onclick="comparision()">Compare</button>
+        </div>
+    </div>
+    <script>
+        var booleanvalue = false;
+        function search() {
+
+            if (booleanvalue == false) {
+                var search_value = document.getElementById("mySearch").value
+                console.log(search_value)
+                var text = { "text": search_value }
+                fetch('/search', {
+                    method: 'POST',
+                    body: JSON.stringify(text),
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(json => {
+                        console.log(json)
+                        var middleDiv = document.createElement('div');
+                        middleDiv.className = 'middle';
+                        for (var i = 0; i < json.length; i++) {
+                            var firstDiv = document.createElement('div');
+                            firstDiv.className = 'first';
+                            var checkbox = document.createElement('input');
+                            checkbox.type = 'checkbox';
+                            checkbox.id = "checkbox" + i
+                            checkbox.className = 'checkboxes';
+                            // checkbox.value = JSON.stringify({ "Brand": json[i].name, "Contract Address": json[i].contract_address });
+                            checkbox.value = JSON.stringify({ "Brand": json[i].name, "Contract Address": json[i].contracts[0], "Image": json[i].logo });
+                            checkbox.name = "projects";
+                            firstDiv.appendChild(checkbox)
+                            var option = document.createElement('option');
+                            option.className = 'option'
+                            option.innerHTML = '<option id="' + i + '">' + name_length(json[i].name) + '</option>'
+                            firstDiv.appendChild(option)
+                            var floor_option = document.createElement('option');
+                            floor_option.className = 'floor_option'
+                            floor_option.innerHTML = '<option id="' + i + '">' + json[i].floor_price + '</option>'
+                            firstDiv.appendChild(floor_option)
+                            var viewbtn = document.createElement("button")
+                            // viewbtn.value = json[i].contract_address
+                            viewbtn.value = JSON.stringify({ "Brand": json[i].name, "Contract Address": json[i].contracts[0], "logo": json[i].logo });
+                            viewbtn.innerText = "View"
+                            viewbtn.addEventListener('click', function () {
+                                var current_data = JSON.parse(this.value)
+                                var contract_add = current_data["Contract Address"]
+                                localStorage.setItem("view_data", this.value);
+                                window.location.href = "http://localhost:3000/view.html?" + contract_add
+                            })
+                            firstDiv.appendChild(viewbtn)
+                            middleDiv.appendChild(firstDiv)
+                        }
+                        document.getElementById("main").appendChild(middleDiv)
+                        var click_checkbox = document.getElementsByClassName("checkboxes");
+                        for (var j = 0; j < click_checkbox.length; j++) {
+                            click_checkbox[j].addEventListener('change', function () {
+                                if (this.checked == true) {
+                                    document.getElementById("compare").style.display = "block"
+                                } else {
+                                    // document.getElementById("compare").style.display = "none"
+                                }
+                            });
+                        }
+
+                    })
+                    .catch(error => {
+                        console.error(error)
+                    })
+            }
+            booleanvalue = true
+        }
+
+        function closefunction() {
+            var x = document.getElementById("mySearch");
+            console.log(document.getElementsByClassName("middle")[0])
+            document.getElementsByClassName("middle")[0].remove()
+            booleanvalue=false
+            document.getElementById("compare").style.display="none"
+        }
+        
+        function comparision() {
+            let markedCheckbox_array = []
+            var markedCheckbox = document.getElementsByClassName("checkboxes");
+            for (var k = 0; k < markedCheckbox.length; k++) {
+                if (markedCheckbox[k].checked == true) {
+                    console.log(JSON.parse(markedCheckbox[k].value))
+                    markedCheckbox_array.push(JSON.parse(markedCheckbox[k].value))
+                }
+            }
+            console.log(markedCheckbox_array)
+            fetch('/statisticaldata', {
+                method: 'POST',
+                body: JSON.stringify(markedCheckbox_array),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
+                }
+            })
+                .then(response => response.json())
+                .then(json => {
+                    console.log(json)
+                    var data = { "name": json }
+                    localStorage.setItem("name", JSON.stringify(data));
+                    window.location.href = "http://localhost:3000/chart.html"
+                })
+        }
+
+        function name_length(value) {
+            if (value == null) {
+                return "x"
+            }
+            else if (value.length > 50) {
+                return value.substr(0, 50) + '...';
+            }
+            else {
+                return value
+            }
+        }
+    </script>
+</body>
+
+</html>
